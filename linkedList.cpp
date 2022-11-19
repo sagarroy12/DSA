@@ -14,27 +14,35 @@ public:
     }
 };
 
-void deleteHead(Node* &head){
-    if(head->next == NULL){
+void deleteHead(Node *&head)
+{
+    if (head->next == NULL)
+    {
         delete head;
-    }else{
+    }
+    else
+    {
         Node *t = head;
         head = head->next;
         delete t;
-
     }
 }
 
-void deleteN(Node* &head, int position){
-    if(position == 1){
+void deleteN(Node *&head, int position)
+{
+    if (position == 1)
+    {
         deleteHead(head);
     }
-    else{
+    else
+    {
         Node *t = head;
-        for(int i=1;i<position-1;i++){
+        for (int i = 1; i < position - 1; i++)
+        {
             t = t->next;
-            if(t==NULL){
-                cout<<"list ka bahar aa gya"<<endl;
+            if (t == NULL)
+            {
+                cout << "list ka bahar aa gya" << endl;
                 return;
             }
         }
@@ -108,19 +116,116 @@ void printList(Node *h)
     }
 }
 
+void reverseList(Node *&head)
+{
+
+    if (head == NULL || head->next == NULL)
+    {
+        return;
+    }
+
+    Node *prev = NULL;
+    Node *n = NULL;
+    while (head->next != NULL)
+    {
+        n = head->next;
+        head->next = prev;
+        prev = head;
+        head = n;
+    }
+    head->next = prev;
+}
+
+void reverseListR(Node *&head, Node *prev, Node *forward)
+{
+
+    if (forward->next == NULL)
+    {
+        head->next = prev;
+        return;
+    }
+
+    forward = head->next;
+    head->next = prev;
+    prev = head;
+    head = forward;
+    reverseListR(head, prev, forward);
+}
+
+Node *findMiddle(Node *head)
+{
+    if (head == NULL)
+    {
+        return head;
+    }
+    else
+    {
+        Node *j = head;
+        Node *j2 = head;
+        while (j2->next != NULL)
+        {
+            j = j->next;
+            j2 = j2->next->next;
+        }
+        return j;
+    }
+}
+
+Node *reverseKNodes(Node *head, int k)
+{
+
+    if (head == NULL)
+    {
+        return NULL;
+    }
+
+    Node *currentN = head;
+    Node *frontN = NULL;
+    Node *prevN = NULL;
+    int count = 0;
+
+    while (currentN != NULL && count < k)
+    {
+        frontN = currentN->next;
+        currentN->next = prevN;
+        prevN = currentN;
+        currentN = frontN;
+        count++;
+    }
+    if (frontN != NULL)
+    {
+        head->next = reverseKNodes(frontN, k);
+    }
+    return prevN;
+}
+
 int main()
 {
 
     Node *head = NULL;
     Node *tail = NULL;
 
-    insertAtHead(head, 22);
-    insertAtTail(head, 233);
-    insertAtTail(head, 234);
-    insertAtTail(head, 444);
-    insertAtHead(head, 49494);
-    insertAtPosition(head, 4, 2222222);
-    deleteN(head, 13);
+    insertAtHead(head, 1);
+    insertAtTail(head, 2);
+    insertAtTail(head, 3);
+    insertAtTail(head, 4);
+    insertAtTail(head, 5);
+    insertAtTail(head, 6);
+    insertAtTail(head, 7);
+    insertAtTail(head, 8);
+
+    printList(head);
+    cout << endl;
+    // reverseList(head);
+    // Node *prev = NULL;
+    // Node *forward = head;
+    // reverseListR(head, prev, forward);
+    // printList(head);
+    // cout<<endl;
+    // Node *middleNode = findMiddle(head);
+    // cout<<middleNode->data;
+
+    head = reverseKNodes(head, 3);
     printList(head);
 
     return 0;
