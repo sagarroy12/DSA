@@ -111,6 +111,30 @@ void printList(Node *head)
     }
 }
 
+
+void reverseList(Node *&head)
+{
+    if (head == NULL)
+    {
+        return;
+    }
+
+    Node *frontN = NULL;
+    Node *currentN = head;
+    Node *backN = NULL;
+    while (currentN->next != NULL)
+    {
+        frontN = currentN->next;
+        currentN->prev = frontN;
+        currentN->next = backN;
+        backN = currentN;
+        currentN = frontN;
+    }
+    currentN->next = backN;
+    currentN->prev = NULL;
+    head = currentN;
+}
+
 int main()
 {
 
