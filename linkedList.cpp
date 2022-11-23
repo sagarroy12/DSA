@@ -5,12 +5,12 @@ class Node
 {
 public:
     int data;
-    Node *next;
+    Node *next = NULL;
 
     Node(int data)
     {
         this->data = data;
-        this->next = NULL;
+        // this->next = NULL;
     }
 };
 
@@ -114,6 +114,7 @@ void printList(Node *h)
             h = h->next;
         } while (h != NULL);
     }
+    cout << endl;
 }
 
 void reverseList(Node *&head)
@@ -154,19 +155,21 @@ void reverseListR(Node *&head, Node *prev, Node *forward)
 
 Node *findMiddle(Node *head)
 {
-    if (head == NULL)
+    Node *j = head;
+    Node *j2 = head->next;
+    if (head == NULL || head->next == NULL)
     {
         return head;
     }
     else
     {
-        Node *j = head;
-        Node *j2 = head;
-        while (j2->next != NULL)
+
+        while (j2 != NULL && j2->next != NULL)
         {
             j = j->next;
             j2 = j2->next->next;
         }
+
         return j;
     }
 }
@@ -199,33 +202,179 @@ Node *reverseKNodes(Node *head, int k)
     return prevN;
 }
 
+// return the node where the loop starts
+// assuming that the loop is  present;
+// can also make a function that check for the loop and return bool.
+Node *detectStartingNodeofL(Node *head)
+{
+    if (head == NULL)
+        return NULL;
+
+    Node *slow = head;
+    Node *fast = head;
+
+    while (slow != fast)
+    {
+        fast = fast->next->next;
+        slow = slow->next;
+    }
+
+    slow = head;
+    while (slow != head)
+    {
+        slow = slow->next;
+        fast = fast->next;
+    }
+    return slow;
+}
+
+void removeLoop(Node *head)
+{
+    Node *loopAt = detectStartingNodeofL(head);
+    Node *t = loopAt;
+    while (t->next != loopAt)
+    {
+        t = t->next;
+    }
+    t->next = NULL;
+}
+
+// remove dublicate when list is sorted
+void removeDublicateS(Node *head)
+{
+    if (head == NULL)
+    {
+        return;
+    }
+    while (head->next != NULL)
+    {
+        Node *t = head->next;
+        if (t->data == head->data)
+        {
+            head->next = t->next;
+            delete t;
+        }
+        if (head->data != head->next->data)
+        {
+            head = head->next;
+        }
+    }
+}
+
+// remove dublicate when list is unsorted
+void removeDublicateUS(Node *head)
+{
+    Node *temp = NULL;
+
+    for (Node *i = head; i->next != NULL; i = i->next)
+    {
+        for (Node *j = i; j->next != NULL; j = j->next)
+        {
+            if (i->data == j->next->data)
+            {
+                temp = j->next;
+                j->next = temp->next;
+                delete temp;
+            }
+        }
+    }
+}
+// take two sorted linked list and merge them in sorted order.
+Node *sortList(Node *h1, Node *h2)
+{
+    if (h1 == NULL)
+    {
+        return h2;
+    }
+    if (h2 == NULL)
+    {
+        return h1;
+    }
+
+    Node *n = new Node(-1);
+    Node *temp = n;
+    while (h1 != NULL && h2 != NULL)
+    {
+        if (h1->data < h2->data)
+        {
+            temp->next = h1;
+            temp = h1;
+            h1= h1->next;
+        }
+        else
+        {
+            temp->next = h2;
+            temp = h2;
+            h2 = h2->next;
+        }
+    }
+    if (h1 != NULL)
+    {
+        temp->next = h1;
+    }
+    if (h2 != NULL)
+    {
+        temp->next = h2;
+    }
+    n = n->next;
+    return n;
+}
+
+bool palindrome(Node *head)
+{
+    Node *mid = findMiddle(head);
+
+    reverseList(mid);
+    while (head != NULL && mid != NULL)
+    {
+        if (head->data != mid->data)
+        {
+            return false;
+        }
+        else
+        {
+            head = head->next;
+            mid = mid->next;
+        }
+    }
+    return true;
+}
+
+Node *sortList(Node *head)
+{
+    if (head == NULL || head->next == NULL)
+    {
+        return head;
+    }
+    Node *mid = findMiddle(head);
+    Node *left = head;
+    Node *right = mid->next;
+    mid->next = NULL;
+
+    left = sortList(left);
+    right = sortList(right);
+    Node *result = sortList(left, right);
+    return result;
+}
+
 int main()
 {
 
     Node *head = NULL;
     Node *tail = NULL;
 
-    insertAtHead(head, 1);
-    insertAtTail(head, 2);
-    insertAtTail(head, 3);
-    insertAtTail(head, 4);
-    insertAtTail(head, 5);
-    insertAtTail(head, 6);
-    insertAtTail(head, 7);
-    insertAtTail(head, 8);
-
+    insertAtTail(head, 1);
+    insertAtTail(head, 33);
+    insertAtTail(head, 75);
+    insertAtTail(head, 27);
+    insertAtTail(head, 74);
+    insertAtTail(head, 15);
+    insertAtTail(head, 125);
+    insertAtTail(head, 145);
     printList(head);
-    cout << endl;
-    // reverseList(head);
-    // Node *prev = NULL;
-    // Node *forward = head;
-    // reverseListR(head, prev, forward);
-    // printList(head);
-    // cout<<endl;
-    // Node *middleNode = findMiddle(head);
-    // cout<<middleNode->data;
 
-    head = reverseKNodes(head, 3);
+    head = sortList(head);
+
     printList(head);
 
     return 0;
