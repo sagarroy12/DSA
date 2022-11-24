@@ -1,26 +1,42 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void reversing(stack<int> s, stack<int> &r)
-{
-    if (s.empty())
-    {
+// void reversing(stack<int> s, stack<int> &r)
+// {
+//     if (s.empty())
+//     {
+//         return;
+//     }
+//     r.push(s.top());
+//     s.pop();
+//     reversing(s, r);
+// }
+
+void insertAtBottom(stack<int>&s, int x){
+
+    if(s.empty()){
+        s.push(x);
         return;
     }
-    r.push(s.top());
+
+    int save = s.top();
     s.pop();
-    reversing(s, r);
+    insertAtBottom(s,x);
+    s.push(save);
+
+
 }
 
-stack<int> reverseF(stack<int> s)
+void reverseF(stack<int> &s)
 {
-    if (s.empty())
-    {
-        return s;
+    if(s.empty()){
+        return;
     }
-    stack<int> r;
-    reversing(s, r);
-    return r;
+    int x = s.top();
+    s.pop();
+    reverseF(s);
+    insertAtBottom(s,x);
+    
 }
 
 void printS(stack<int> s)
@@ -45,7 +61,7 @@ int main()
 
     printS(s);
 
-    s = reverseF(s);
+    reverseF(s);
 
     printS(s);
 
