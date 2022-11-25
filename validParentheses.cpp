@@ -9,7 +9,7 @@ bool isValidParenthesis(string b)
     {
 
         char ch = b[i];
-        cout<<ch;
+        
 
         if (ch == '(' || ch== '{' || ch== '[')
         {
@@ -23,7 +23,7 @@ bool isValidParenthesis(string b)
                 char top = s.top();
                 if ((top == '(' && ch == ')') || (top == '[' && ch == ']') || (top == '{' && ch == '}'))
                 {
-                    cout<<s.top()<<endl;
+          
                     s.pop();
                 }
                 else
