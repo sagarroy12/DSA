@@ -10,7 +10,7 @@ void printF(stack<int> s)
     }
 }
 
-void findNextBigInt(int arr[], int size, stack<int> &ans)
+void nextSmallElement(int arr[], int size, stack<int> &ans)
 {
 
     if (size == 0)
@@ -44,7 +44,7 @@ int main()
 
     stack<int> s;
 
-    findNextBigInt(arr, size, s);
+    nextSmallElement(arr, size, s);
 
     // printF(s);
 
